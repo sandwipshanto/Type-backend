@@ -13,6 +13,7 @@ app.use(cors())
 app.use(express.json());
 
 // Use the routes
+app.use('/api/health', (_req,res)=> res.sendStatus(200));
 app.use('/api', mistakeRoutes);
 app.use('/api/texts', textRoutes);
 
