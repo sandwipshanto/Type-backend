@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Text = require('../models/Text');
-const { dummyData } = require('../static');
+
 
 // Get a random text
 router.get('/random', async (req, res) => {
@@ -17,11 +17,9 @@ router.get('/random', async (req, res) => {
 
 // Add a new text
 router.post('/', async (req, res) => {
-  // const text = new Text({
-  //   content: req.body.content,
-  // });
+
   try {
-    await Text.insertMany(dummyData)
+    await Text.insertMany(req.body)
     return res.status(201).json({
       message: "Texts added successfully"
     })
