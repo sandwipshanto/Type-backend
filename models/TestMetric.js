@@ -1,38 +1,26 @@
-const express = require('express');
-const router = express.Router();
-const User = require('../models/User');
-const TestMetric = require('../models/TestMetric');
+const mongoose = require('mongoose');
 
-// Create new user
-router.post('/users', async (req, res) => {
-  try {
-    const { name, registrationNumber, department } = req.body;
-    const user = new User({ name, registrationNumber, department });
-    await user.save();
-    res.status(201).json(user);
-  } catch (error) {
-    console.error('Error creating user:', error);
-    res.status(500).json({ message: 'Error creating user' });
-  }
+const testMetricSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  name: { type: String, required: true },
+  registrationNumber: { type: String, required: true },
+  department: { type: String, required: true },
+  timeIntervalStat: { type: Number, required: true },
+  halfTime: { type: Number, required: true },
+  breakTime: { type: Number, required: true },
+  charactersTyped: { type: Number, required: true },
+  mistakes: { type: Number, required: true },
+  firstHalf: {
+    charactersTyped: { type: Number, required: true },
+    mistakes: { type: Number, required: true },
+    timeSpent: { type: Number, required: true }
+  },
+  secondHalf: {
+    charactersTyped: { type: Number, required: true },
+    mistakes: { type: Number, required: true },
+    timeSpent: { type: Number, required: true }
+  },
+  createdAt: { type: Date, default: Date.now }
 });
 
-// Save test metrics
-router.post('/metrics', async (req, res) => {
-  try {
-    const { userId, firstHalf, secondHalf, halfTime, breakTime } = req.body;
-    const metric = new TestMetric({
-      userId,
-      firstHalf,
-      secondHalf,
-      halfTime,
-      breakTime
-    });
-    await metric.save();
-    res.status(201).json(metric);
-  } catch (error) {
-    console.error('Error saving metrics:', error);
-    res.status(500).json({ message: 'Error saving metrics' });
-  }
-});
-
-module.exports = router;
+module.exports = mongoose.model('TestMetric', testMetricSchema);
